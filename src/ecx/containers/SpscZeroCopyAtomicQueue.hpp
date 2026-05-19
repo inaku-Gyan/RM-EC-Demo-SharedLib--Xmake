@@ -35,26 +35,26 @@ class SpscZeroCopyAtomicQueue {
 #if ECX_USE_USAGE_CHECK
     // 0: idle, 0b01: reading, 0b10: writing
     // 读位仅由消费者改、写位仅由生产者改，两位互不相干，无需 acquire/release
-    mutable std::atomic_uint8_t state_{0};
+    std::atomic_uint8_t state_{0};
 
-    void M_write_begin() { state_.fetch_or(0b10, std::memory_order_relaxed); }
+    void M_write_begin() noexcept { state_.fetch_or(0b10, std::memory_order_relaxed); }
 
-    void M_write_end() { state_.fetch_and(~0b10, std::memory_order_relaxed); }
+    void M_write_end() noexcept { state_.fetch_and(~0b10, std::memory_order_relaxed); }
 
-    void M_read_begin() const { state_.fetch_or(0b01, std::memory_order_relaxed); }
+    void M_read_begin() noexcept { state_.fetch_or(0b01, std::memory_order_relaxed); }
 
-    void M_read_end() const { state_.fetch_and(~0b01, std::memory_order_relaxed); }
+    void M_read_end() noexcept { state_.fetch_and(~0b01, std::memory_order_relaxed); }
 
-    bool M_is_writing() const { return (state_.load(std::memory_order_relaxed) & 0b10) != 0; }
+    bool M_is_writing() const noexcept { return (state_.load(std::memory_order_relaxed) & 0b10) != 0; }
 
-    bool M_is_reading() const { return (state_.load(std::memory_order_relaxed) & 0b01) != 0; }
+    bool M_is_reading() const noexcept { return (state_.load(std::memory_order_relaxed) & 0b01) != 0; }
 #endif  // ECX_USE_USAGE_CHECK
 
 public:
     // 默认构造 / 析构函数 / 赋值操作符使用默认实现
     // （atomic 成员非可拷贝/可移动，因此本类型同样不可拷贝/移动）
 
-    const T* read_acquire() const noexcept {
+    const T* read_acquire() noexcept {
         ECX_USAGE_ASSERT(!M_is_reading());
 
         // reader_ 仅由本线程（消费者）修改，relaxed 读取自己写入的值即可
@@ -71,7 +71,7 @@ public:
 #endif  // ECX_USE_USAGE_CHECK
 
 #if ECX_USE_DCACHE
-        auto ptr  = reinterpret_cast<uint32_t*>(const_cast<TSlot_*>(&buffer_[r]));
+        auto ptr  = reinterpret_cast<uint32_t*>(&buffer_[r]);
         auto size = sizeof(buffer_[r]);
         switch (kDCachePolicy) {
             // 1. CPU -> 外设: 此时是外设在调用该方法进行读取

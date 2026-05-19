@@ -44,7 +44,7 @@ TEST(SpscZeroCopyAtomicQueueBadUsageDeathTest, WriteCommitWithoutAcquire) {
 // 失败的 acquire（空队列读 / 满队列写）不应进入 reading/writing 状态，
 // 因此可以重复调用而不触发断言。
 TEST(SpscZeroCopyAtomicQueueBadUsageTest, ReadAcquireOnEmptyDoesNotEnterReadState) {
-    SpscZeroCopyAtomicQueue<int, 4> const q;
+    SpscZeroCopyAtomicQueue<int, 4> q;
     EXPECT_EQ(q.read_acquire(), nullptr);
     EXPECT_EQ(q.read_acquire(), nullptr);
 }

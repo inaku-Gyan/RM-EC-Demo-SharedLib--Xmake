@@ -13,7 +13,7 @@ namespace {
 using ecx::SpscZeroCopyAtomicQueue;
 
 TEST(SpscZeroCopyAtomicQueueTest, EmptyOnConstruction) {
-    SpscZeroCopyAtomicQueue<int, 4> const q;
+    SpscZeroCopyAtomicQueue<int, 4> q;
     EXPECT_TRUE(q.empty());
     EXPECT_FALSE(q.full());
     EXPECT_EQ(q.size(), 0U);
