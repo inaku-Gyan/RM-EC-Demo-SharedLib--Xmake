@@ -19,6 +19,8 @@ target_include_directories(ecx INTERFACE
 )
 target_compile_features(ecx INTERFACE cxx_std_20)
 
+add_subdirectory(deps_inc)
+
 option(ECX_BUILD_TESTS     "Build host-side tests" ${PROJECT_IS_TOP_LEVEL})
 option(ECX_BUILD_ARM_CHECK "Compile algo+proto with arm-none-eabi-gcc as a smoke check" OFF)
 
@@ -44,5 +46,8 @@ if(ECX_BUILD_ARM_CHECK)
     target_compile_definitions(ecx_arm_check PRIVATE
         "ECX_INC_USER_CONFIG=\"ecx_config_template.hpp\""
     )
-    target_link_libraries(ecx_arm_check PRIVATE ecx::ecx)
+    target_link_libraries(ecx_arm_check PRIVATE
+        deps
+        ecx::ecx
+    )
 endif()

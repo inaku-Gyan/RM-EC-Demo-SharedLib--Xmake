@@ -60,6 +60,7 @@ function(ecx_add_test_executable)
 
     add_executable(${ARG_NAME} ${ARG_SOURCES})
     target_link_libraries(${ARG_NAME} PRIVATE
+        deps
         ecx::ecx
         GTest::gtest_main
         GTest::gtest
