@@ -21,3 +21,12 @@ ecx_add_test_executable(
     CONFIG  "common/ecx_config_no_usage_check.hpp"
     PREFIX  "SpscZeroCopyAtomicQueue::NoUsageCheck::"
 )
+
+# 启用 cache 支持的 config
+ecx_add_test_executable(
+    NAME    test_SpscZeroCopyAtomicQueue_use_cache
+    SOURCES test_SpscZeroCopyAtomicQueue.cpp
+            test_SpscZeroCopyAtomicQueue_BadUsage.cpp
+    CONFIG  "common/ecx_config_use_cache.hpp"
+    PREFIX  "SpscZeroCopyAtomicQueue::UseCache::"
+)
