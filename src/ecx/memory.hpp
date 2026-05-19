@@ -41,10 +41,10 @@ enum class CachePolicy : uint8_t {
      */
     Invalidate,
     /**
-     * 先将数据写回内存，再使缓存行失效。
-     * 用于数据流向: 双向，或不确定
+     * 仅对齐，不执行任何缓存操作。
+     * 手动在容器外部管理缓存
      */
-    CleanInvalidate,
+    AlignOnly,
 };
 
 #if ECX_USE_DCACHE
